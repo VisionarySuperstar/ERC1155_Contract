@@ -26,11 +26,16 @@ describe("Create Initial Contracts of all types", function () {
   });
   it("should deploy NFT Contract", async function () {
     const instanceNFT = await ethers.getContractFactory("CustomNFT");
-    NFT = await instanceNFT.deploy(NFT_uri);
+    NFT = await instanceNFT.deploy();
     NFTAddress = await NFT.getAddress();
     console.log("\tNFT Contract deployed at:", NFTAddress);
     await NFT.setUSDC(USDCAddress);
   });
+  it("set tokenURI", async function(){
+    await NFT.setURI(0, "first Logo");
+    await NFT.setURI(1, "second Logo");
+    await NFT.setURI(2, "third Logo");
+  })
 });
 describe("Send USDC to buyers", async function(){
   it("start distributing FeeToken", async function(){
@@ -64,5 +69,14 @@ describe("buy NFT", async function(){
     })
     it("check owner's USDC balance", async function(){
         expect(await USDC.balanceOf(owner.address)).to.equal(ethers.parseUnits("10000000000", 6) - ethers.parseUnits("30000", 6) + ethers.parseUnits("13000", 6));
+    })
+    it("uri", async function(){
+      const uri_1 = await NFT.uri(0);
+      const uri_2 = await NFT.uri(1);
+      const uri_3 = await NFT.uri(2);
+      console.log("\turi_1 : ", uri_1);
+      console.log("\turi_2 : ", uri_2);
+      console.log("\turi_3 : ", uri_3);
+
     })
 })

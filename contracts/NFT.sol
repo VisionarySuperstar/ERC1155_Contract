@@ -12,8 +12,9 @@ contract CustomNFT is ERC1155, Ownable {
     uint256 public price;
     address constant MAINNET_USDC = 0x036CbD53842c5426634e7929541eC2318f3dCF7e; // USDC address in Base Sepolia Testnet
     IERC20 usdc = IERC20(MAINNET_USDC); // USDC contract address
+    mapping (uint256 => string) public tokenURI;
 
-    constructor(string memory _uri) ERC1155(_uri) Ownable(msg.sender){
+    constructor() ERC1155("") Ownable(msg.sender){
         _mint(msg.sender, Gold, 100, "");
         _mint(msg.sender, Silver, 100, "");
         _mint(msg.sender, Bronze, 100, "");
@@ -35,5 +36,11 @@ contract CustomNFT is ERC1155, Ownable {
 
     function setUSDC(address _USDCaddress) external onlyOwner{
         usdc = IERC20(_USDCaddress);
+    }
+    function uri(uint256 _id) public view override returns(string memory){
+        return tokenURI[_id];
+    }
+    function setURI(uint256 _id, string memory _uri) external onlyOwner{
+        tokenURI[_id] = _uri;
     }
 }
